@@ -1,0 +1,43 @@
+#publishing-presentation .noborder {
+    border: 0 transparent none;
+}
+#publishing-presentation .inverse {
+    filter: invert(100%);
+}
+#publishing-presentation .noshadow {
+    box-shadow: none;
+    text-shadow: none;
+}
+#publishing-presentation .bold {
+    padding: 4px 12px;
+    background: orange;
+    color: black;
+    transform: rotate(3deg);
+    display: inline-block
+}
+#publishing-presentation .left-align {
+ text-align: left;
+}
+#publishing-presentation .right-align {
+ text-align: right;
+}
+#publishing-presentation .keep-case {
+    text-transform: initial;
+}
+#publishing-presentation .big {
+    font-size: 1em;
+}
+#publishing-presentation .medium {
+    font-size: 0.8em;
+}
+#publishing-presentation li+li {
+    margin-top: 1em;
+}
+#publishing-presentation .links li+li {
+    margin-top: 0.3em;
+}
+
+#publishing-presentation pre+ul,
+#publishing-presentation pre+ol {
+    margin-top: 1em;
+}

@@ -1,0 +1,483 @@
+  <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>How to Publish Javascript Libraries</title>
+
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/reveal.css" />
+    <link id="theme" rel="stylesheet" href="css/theme/white.css" />
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/monokai.css" />
+
+    <link rel="stylesheet" href="css/custom.css" />
+
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.type = "text/css";
+      link.href = window.location.search.match(/print-pdf/gi)
+        ? "css/print/pdf.css"
+        : "css/print/paper.css";
+      document.getElementsByTagName("head")[0].appendChild(link);
+    </script>
+    <style title="datepickerzoom">
+      .react-datepicker-popper {
+        zoom: 1;
+      }
+    </style>
+  </head>
+  <body id="publishing-presentation">
+    <div class="reveal">
+      <div class="slides">
+        <section theme="black">
+          <h1>How to Publish JS</h1>
+          <a href="http://twitter.com/jacarma" rel="author">Javier Carrasco</a>
+        </section>
+        <section>
+          <h1>WHY: reuse</h1>
+          <aside class="notes">
+            Ourserlves or others, easily
+          </aside>
+        </section>
+        <section>
+          <h1>WHERE: npmjs</h1>
+          <aside class="notes">
+            Repository
+              package manager (npm, yarn)
+              transitive dependencies
+              updating
+              publishing
+              replicability
+          </aside>
+        </section>
+        <section theme="black">
+          <h1>package.json</h1>
+        </section>
+        <section>
+          <ul>
+            <li>Name</li>
+            <li>Version</li>
+            <li>Description</li>
+            <li>Author</li>
+            <li>License</li>
+            <li>Repository</li>
+            <li>Homepage</li>
+          </ul>
+          <aside class="notes">
+            Name: use scoped @username/libname
+            Version: semver
+            Author: Name &lt;email&gt; (web)
+            License: ISC / MIT / See license in...
+
+          </aside>
+        </section>
+        <section>
+          <ul>
+            <li>main</li>
+            <li>module</li>
+            <li>jsnext:main</li>
+            <li>type</li>
+            <li>dependencies</li>
+            <li>sideEffects</li>
+          </ul>
+        </section>
+        <section theme="black">
+          <h1>Module</h1>
+          <img src="img/lego.png" alt="" class="noborder noshadow inverse">
+          <aside class="notes">
+            A module is pluggable like a lego
+          </aside>
+        </section>
+        <section>
+          <h1>prehistory</h1>
+          <aside class="notes">&lt;script&gt; and globals</aside>
+        </section>
+        <section>
+          <h1>IIFE</h1>
+          <pre class="big"><code>
+(function () {
+  ...
+})();
+            </code></pre>
+          <aside class="notes">Immediately Invoked Function Expression</aside>
+        </section>
+        <section>
+          <h1>CommonJS</h1>
+          <pre class="big"><code>
+var path = require('path');
+module.exports = ...
+module.exports.NAMED = ...
+            </code></pre>
+          <h2>Browserify</h2>
+          <aside class="notes">
+            Server 2009 ServerJS -> CommonJS. ECMA, W3C, <br />
+            Browserify Bundler
+          </aside>
+        </section>
+        <section>
+          <h1>AMD</h1>
+          <pre><code>
+define(name, [dependencies], function(dependencies) {
+  ...
+  require ([asynch-deps], function(asynch-deps)) {
+    ...
+  }
+})
+            </code></pre>
+          <h2>RequireJS</h2>
+          <aside class="notes"></aside>
+        </section>
+        <section>
+          <h1>UMD</h1>
+          <h2>IIFE + AMD + CJS</h2>
+        </section>
+        <section>
+          <h1>ECMA Offices...</h1>
+          <img src="img/xkcd-standards.jpg" alt="XKCD Competing Standards" class="noborder noshadow">
+          <aside class="notes">It was a mess because not standard</aside>
+
+        </section>
+        <section>
+          <h1>ESM</h1>
+          <pre class="medium"><code>
+import { format } from "date-utils";
+export ...
+export default ...
+            </code></pre>
+        </section>
+        <section>
+          <h1>System.register</h1>
+          <pre><code>
+System.register([dependencies], function(export) {
+  export('parseDate', function () { ... });
+});
+            </code></pre>
+          <h2>SystemJS</h2>
+          <aside class="notes">
+            Most browsers support modules now, why not use that? - no mapping
+            tables - no ie
+          </aside>
+        </section>
+        <section>
+          <h1>Preferred 4 dist</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>App</th>
+                <th>Module</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Server / terminal</td>
+                <td>CJS -> ESM</td>
+              </tr>
+              <tr>
+                <td>Browser</td>
+                <td>ESM</td>
+              </tr>
+              <tr>
+                <td>Old browser apps</td>
+                <td>AMD / IIFE</td>
+              </tr>
+              <tr>
+                <td>Server + Browser + Old</td>
+                <td><span class="bold">UMD + ESM</span></td>
+              </tr>
+
+            </tbody>
+          </table>
+          <aside class="notes">
+            Write ESM -> generate rest
+            Bundle for it's usage
+            2 module types thanks to module and jsnext:main
+          </aside>
+        </section>
+        <section theme="black">
+          <h1>Should we Bundle?</h1>
+        </section>
+        <section>
+          <h1>YES</h1>
+          <aside class="notes">
+            <ul>
+              <li>Generate UMD + ESM</li>
+              <li>Bundled can improve performance on browser</li>
+            </ul>
+          </aside>
+        </section>
+        <section theme="black">
+          <h1>Should we bundle dependencies?</h1>
+        </section>
+        <section>
+          <h1>NO</h1>
+          <aside class="notes">Make all dependencies external, exception for browsers maybe?</aside>
+        </section>
+        <section theme="black">
+          <h1>Should we transpile to older EcmaScript?</h1>
+        </section>
+        <section><h1>YES</h1></section>
+        <section><h2>Polyfills?</h2>
+          <img src="img/promises.jpg" alt="">
+          <aside class="notes">
+            Check on runtime and throw error
+            Add to docs
+          </aside>
+        </section>
+        <section><h1>What about CSS?</h1><aside class="notes">Extract</aside></section>
+        <section theme="black">
+          <h1>What happens with Typescript?</h1>
+        </section>  
+        <section>
+            
+            <ul>
+                <li><span class="bold">Highly Recommended!</span></li>
+                <li>Package.json "types"</li>
+                <li>type dependencies are not dev</li>
+                <li>Don’t use /// &lt;reference path="..." /></li>
+
+              </ul>
+       
+        </section>
+        <section theme="black">
+          <h2 class="keep-case">package-lock.json or npm-shrinkwrap.json ?</h2>
+        </section>
+        <section>
+          <table>
+            <thead>
+              <tr>
+                <td>File</td>
+                <td>Transitive</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>package.lock</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>npm-shrinkwrap.json</td>
+                <td class="right-align"><span class="bold">X</span></td>
+              </tr>
+              <tr>
+                <td>yarn.lock</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+          <aside class="notes">
+            you don' have to care
+            do not use npm-shrinkwrap for libraries only for CLI or server
+          </aside>
+        </section>
+        <section theme="black">
+          <h1>Wich files to include</h1>
+          <aside class="notes">
+              package.json
+              README 
+              CHANGELOG 
+              LICENSE
+          </aside>
+        </section>
+        <section>
+          <ul>
+            <li>.npmignore || .gitignore</li>
+            <li>package.json files</li>
+            <li>check: npm pack</li>
+          </ul>
+        </section>
+        <section theme="black">
+          <h1>Complete Process</h1>
+        </section>
+        <section>
+          <h1>Create</h1>
+          <ul>
+            <li>git init</li>
+            <li>npm init</li>
+            <li>write code and tests</li>
+            <li>generate bundles</li>
+          </ul>
+        </section>
+        <section>
+          <h1>README</h1>
+          <ul>
+            <li>Name and what it is</li>
+            <li>How to install</li>
+            <li>How to use</li>
+          </ul>
+        </section>
+        <section><h1>Run tests</h1></section>
+        
+      <section><h1>Additional checks</h1>
+        <ul>
+          <li>Right branch</li>
+          <li>Working dir clean</li>
+          <li>Dependencies updated</li>
+          <li>Check bundles content</li>
+        </ul>
+      </section>
+
+        <section>
+          <h1>Check behaviour</h1>
+          <p>Example project</p>
+          <pre><code>
+{
+  "name": "@jacarma/nil-example",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@jacarma/nil": "file:.."
+  },
+  "scripts": {
+    "start": "dev-server"
+  }
+}
+          </code></pre>
+          <aside class="notes">Or npm link</aside>
+        </section>
+        <section><h1>Check Files</h1>
+        <pre class="big"><code>npm pack</code></pre>
+          <img src="img/npm-pack.png" alt="">
+      </section>
+
+
+
+      <section>
+          <a href="https://www.npmjs.com/signup">npmjs.com/signup</a>
+          <img src="img/npm-signup.png" alt="">
+        </section>
+        <section>
+          <pre><code>
+> npm login
+    Username: jacarma
+    Password: 
+    Email: (this IS public) jacarma@gmail.com
+    Logged in as jacarma on http://registry.npmjs.org/
+            </code></pre>
+        </section>
+
+        <section>
+          <pre class="medium"><code>npm version [major | minor | patch]</code></pre>
+          <ol>
+            <li>bumps version</li>
+            <li>new tag</li>
+          </ol>
+        </section>
+        <section>
+          <pre class="big"><code>
+git push --follow-tags
+          </code></pre>
+        </section>
+        <section>
+          <pre class="big"><code>
+npm publish --access public
+        </code></pre>
+        </section>
+        <section data-background-image="https://i.giphy.com/media/lqkcaxZyn6kLziH184/giphy.webp"> 
+        </section>
+        <section>
+          <h1>Optional</h1>
+          <ul>
+            <li>Release Notes</li>
+            <li>Update website</li>
+          </ul>
+          <aside class="notes">
+            Github release
+            gh-pages
+          </aside>
+        </section>
+        <section>
+          <h1>np tool</h1>
+          <ul>
+            <li><a href="https://github.com/sindresorhus/np">github.com/sindresorhus/np</a></li>
+            <li>interactive</li>
+            <li>runs checks</li>
+            <li>bump version + tag</li>
+            <li>publish to npm</li>
+          </ul>
+        </section>
+        <section><h1>Advanced</h1>
+        <ul>
+          <li><a href="https://docs.npmjs.com/configuring-two-factor-authentication">npm 2 factor authentication</a></li>
+          <li><a href="https://docs.npmjs.com/misc/config#sign-git-tag">sign tags</a></li>
+        </ul>
+        </section>
+        <section>
+          <h1>Duties</h1>
+          <ul>
+            <li>Answer questions, bugs and PR</li>
+            <li>Keep dependencies up to date</li>
+            <li>Keep library secure</li>
+            <li>Have an eye on security alerts</li>
+            <li>Warn when not maintained</li>
+          </ul>
+        </section>
+        <section>
+          <h2>links</h2>
+          <ul class="links">
+              <li><a href="https://medium.com/sungthecoder/javascript-module-module-loader-module-bundler-es6-module-confused-yet-6343510e7bde">
+                Brief history of JavaScript Modules
+              </a></li>
+              <li><a href="https://v8.dev/features/modules">V8 ESM modules</a></li>
+              <li><a href="https://madewithlove.be/optimizing-javascript-packages-for-tree-shaking/">
+                Optimizing JavaScript packages for tree shaking
+              </a></li>
+              <li><a href="https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html">
+                Typescript publishing</a></li>
+              <li><a href="https://docs.npmjs.com/misc/developers">npmjs developers</a></li>
+              <li><a href="https://docs.npmjs.com/packages-and-modules/contributing-packages-to-the-registry">npmjs contributing packages</a></li>
+              <li><a href="https://help.github.com/en/articles/creating-releases">Github creating releases</a></li>
+          </ul>
+        </section>
+        <section data-background-image="https://i.giphy.com/media/XHVmD4RyXgSjd8aUMb/giphy.webp">
+        </section>
+        <section>
+          <p><a href="mailto:jacarma@gmail.com">jacarma@gmail.com</a></p>
+          <p><a href="https://github.com/jacarma/nil">github.com/jacarma/nil</a></p>
+        </section>
+        
+      </div>
+    </div>
+
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+      // - https://github.com/hakimel/reveal.js#configuration
+      // - https://github.com/hakimel/reveal.js#dependencies
+      Reveal.initialize({
+        width: 960,
+        height: 700,
+        hash: true,
+
+        dependencies: [
+          { src: "plugin/markdown/marked.js" },
+          { src: "plugin/markdown/markdown.js" },
+          { src: "plugin/notes/notes.js", async: true },
+          { src: "plugin/highlight/highlight.js", async: true }
+        ]
+      });
+
+      const themeTag = document.getElementById("theme");
+      Reveal.addEventListener("slidechanged", function(event) {
+        setTheme(event.currentSlide.getAttribute("theme"));
+      });
+      Reveal.addEventListener("ready", function(event) {
+        setTheme(event.currentSlide.getAttribute("theme"));
+      });
+
+      function setTheme(theme) {
+        themeTag.setAttribute("href", `css/theme/${theme || "white"}.css`);
+      }
+    </script>
+  </body>
+</html>
