@@ -4,12 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "live-server"
-  },
-  "dependencies": {
-    "gh-pages": "^2.1.1"
+    "start": "live-server src",
+    "deploy": "gh-pages -d src"
   },
   "devDependencies": {
-    "live-server": "^1.2.1"
+    "live-server": "^1.2.1",
+    "gh-pages": "^2.1.1"
+
   }
 }
